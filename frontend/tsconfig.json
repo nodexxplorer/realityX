@@ -1,0 +1,65 @@
+
+{
+  "compilerOptions": {
+    // "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "types": ["next-auth"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "outDir": "./dist", // Or wherever your compiled JS goes
+    "rootDir": "./",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noEmit": true,
+    "incremental": true,
+    "target": "es2020",
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": ".", // ✅ added for import alias
+    "paths": {
+      
+    
+      "@/components/*": [
+        "components/*"
+      ],
+      "types": ["next-auth"],
+      "@/lib/*": ["lib/*"],
+      "@/*": ["./*"]
+      },
+    "plugins": [
+      {
+        
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
+  },
+  "ts-node": {
+    "esm": true,
+    "transpileOnly": true,
+    // "swc": true
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "/types",
+    "**/*.tsx"
+  ],
+    "types": ["node"],
+    "skipLibCheck": true,
+
+  "exclude": [
+    "node_modules"
+  ]
+}
+

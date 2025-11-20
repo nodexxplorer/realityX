@@ -1,0 +1,6 @@
+{
+  "schema": "./frontend/drizzle/schema/index.ts",
+  "out": "./frontend/drizzle/migrations",
+  "driver": "pg",
+  "dbCredentialsEnv": "DATABASE_URL"
+}

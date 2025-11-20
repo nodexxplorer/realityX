@@ -1,0 +1,12 @@
+{
+  "components": "components",
+  "utils": "lib/utils.ts",
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "app/globals.css"
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils"
+  }
+}
