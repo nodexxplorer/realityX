@@ -1,7 +1,7 @@
 // lib/session.ts
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/lib/auth-options";
 import type { Session } from "next-auth";
 
 // This is a helper to fetch the typed session on the server
