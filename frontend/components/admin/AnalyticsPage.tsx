@@ -63,7 +63,7 @@ export function AnalyticsPage() {
             </p>
             {error && (
               <p className="text-sm text-red-500 dark:text-red-400 mt-2">
-                Error: {error instanceof Error ? error.message : 'Unknown error'}
+                Error: {typeof error === 'object' && error !== null && 'message' in error ? (error as any).message : 'Unknown error'}
               </p>
             )}
           </div>
