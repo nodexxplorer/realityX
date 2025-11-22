@@ -336,10 +336,10 @@ export default function UpgradePage() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-200 font-sans antialiased">
-      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
         {/* Wallet Connection Section */}
         
-            <div className="mb-6 flex justify-center items-center">
+            <div className="mb-6 flex justify-center gap-2 items-center">
             <ConnectionProvider endpoint={endpoint}>
               <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
@@ -348,15 +348,17 @@ export default function UpgradePage() {
               </WalletProvider>
             </ConnectionProvider>
             
-            <Button
+        <p className="mt-2 text-sm text-gray-400">Wallet connection is required to proceed.</p>
+        </div>
+
+        <div className="mb-6 flex justify-center gap-2 items-center">
+        <Button
           className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-pink-500 hover:to-purple-600 transition-colors duration-300 text-white px-6 py-3 rounded-xl text-lg"
           onClick={() => alert("Token upgrade flow coming soon!")}
-        >
+          >
           Upgrade with NX Token 🔐
         </Button>
-
-        <p className="mt-4 text-sm text-gray-400">Wallet connection is required to proceed.</p>
-        </div>
+          </div>
 
         {/* Header */}
         <div className="text-center mb-12">

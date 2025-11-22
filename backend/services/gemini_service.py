@@ -241,7 +241,7 @@ async def generate_ai_response_stream(
             plan = None
 
     normalized_plan = plan.lower() if isinstance(plan, str) else None
-    if normalized_plan in {"premuim", "elite", "tier2", "tier_2"}:
+    if normalized_plan in {"premium", "premuim", "elite", "tier2", "tier_2"}:
         model_name = "gemini-2.5-flash-lite"
     elif normalized_plan in {"pro", "tier1", "tier_1"}:
         model_name = "gemini-2.5-flash"

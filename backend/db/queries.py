@@ -2,7 +2,22 @@
 
 from db.database import get_db_pool
 from typing import Optional, Dict, Any
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+def normalize_datetime_for_comparison(dt: Optional[datetime]) -> Optional[datetime]:
+    """
+    Normalize datetime to timezone-aware UTC for safe comparison.
+    If datetime is naive, assumes it's UTC and makes it timezone-aware.
+    If datetime is timezone-aware, converts to UTC.
+    """
+    if dt is None:
+        return None
+    if dt.tzinfo is None:
+        # Naive datetime - assume UTC and make it timezone-aware
+        return dt.replace(tzinfo=timezone.utc)
+    else:
+        # Timezone-aware datetime - convert to UTC
+        return dt.astimezone(timezone.utc)
 
 
 
@@ -217,14 +232,52 @@ async def log_api_usage(user_id: str, conversation_id: int,
 
 
 async def get_user_subscription_tier(user_id: str) -> Optional[str]:
-    """Get user's subscription tier from subscriptions table"""
+    """Get user's subscription tier from subscriptions table (only active, non-expired subscriptions)"""
+    import logging
+    logger = logging.getLogger(__name__)
+    
     pool = await get_db_pool()
     async with pool.acquire() as conn:
-        result = await conn.fetchval(
-            "SELECT plan FROM subscriptions WHERE user_id = $1",
+        result = await conn.fetchrow(
+            """
+            SELECT plan, status, expired_at
+            FROM subscriptions
+            WHERE user_id = $1
+            ORDER BY created_at DESC
+            LIMIT 1
+            """,
             user_id
         )
-        return result
+        if not result:
+            logger.info(f"get_user_subscription_tier: No subscription found for user {user_id}")
+            return None
+        
+        # Check if subscription is active and not expired
+        status = result.get("status")
+        expired_at = result.get("expired_at")
+        plan = result.get("plan")
+        
+        logger.info(f"get_user_subscription_tier: User {user_id} - plan: {plan}, status: {status}, expired_at: {expired_at}")
+        
+        # Return plan only if subscription is active and not expired
+        if status == "active":
+            if expired_at is None:
+                logger.info(f"get_user_subscription_tier: User {user_id} - Active subscription with no expiry, returning plan: {plan}")
+                return plan
+            # Normalize both datetimes to timezone-aware UTC for safe comparison
+            expired_at_normalized = normalize_datetime_for_comparison(expired_at)
+            now = datetime.now(timezone.utc)
+            is_not_expired = expired_at_normalized > now
+            logger.info(f"get_user_subscription_tier: User {user_id} - expired_at: {expired_at} (normalized: {expired_at_normalized}), now: {now}, is_not_expired: {is_not_expired}")
+            if is_not_expired:
+                logger.info(f"get_user_subscription_tier: User {user_id} - Active and not expired, returning plan: {plan}")
+                return plan
+            else:
+                logger.info(f"get_user_subscription_tier: User {user_id} - Subscription expired")
+        else:
+            logger.info(f"get_user_subscription_tier: User {user_id} - Subscription status is not active: {status}")
+        
+        return None
 
 
 async def increment_user_message_count_today(user_id: str):

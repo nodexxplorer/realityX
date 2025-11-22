@@ -251,9 +251,9 @@ export function RateLimitDisplay() {
       {/* Status Cards Row */}
       <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
         {/* Remaining card */}
-        <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 rounded-xl p-4 backdrop-blur-sm">
+        <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 rounded-xl p-2 backdrop-blur-sm">
           <div className="flex items-center gap-2 mb-2">
-            <Zap className="w-4 h-4 text-yellow-400" />
+           {/* <Zap className="w-4 h-4 text-yellow-400" /> */}
             <span className="text-xs text-gray-400 font-medium">Remaining</span>
           </div>
           <div className="text-2xl font-bold text-white">
@@ -263,12 +263,12 @@ export function RateLimitDisplay() {
         </div>
 
         {/* Reset Time card */}
-        <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 rounded-xl p-4 backdrop-blur-sm">
+        <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 rounded-xl pt-5 p-1 backdrop-blur-sm">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="w-4 h-4 text-blue-400" />
             <span className="text-xs text-gray-400 font-medium">Resets</span>
           </div>
-          <div className="text-sm font-bold text-white line-clamp-1">
+          <div className="text-xs font-bold text-white line-clamp-1">
             {resetDate.toLocaleDateString()}
           </div>
           <p className="text-xs text-gray-500 mt-1">{resetDate.toLocaleTimeString()}</p>

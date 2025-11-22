@@ -3,7 +3,22 @@
 import logging
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+def normalize_datetime_for_comparison(dt: Optional[datetime]) -> Optional[datetime]:
+    """
+    Normalize datetime to timezone-aware UTC for safe comparison.
+    If datetime is naive, assumes it's UTC and makes it timezone-aware.
+    If datetime is timezone-aware, converts to UTC.
+    """
+    if dt is None:
+        return None
+    if dt.tzinfo is None:
+        # Naive datetime - assume UTC and make it timezone-aware
+        return dt.replace(tzinfo=timezone.utc)
+    else:
+        # Timezone-aware datetime - convert to UTC
+        return dt.astimezone(timezone.utc)
 from pydantic import BaseModel
 from enum import Enum
 
@@ -21,12 +36,13 @@ router = APIRouter()
 
 PLAN_PRICES = {
     "pro": 0.05,
-    "premuim": 0.25,  # legacy typo
+    # "premuim": 0.25,  # legacy typo
     "elite": 0.25,
 }
 
 PREMIUM_PLAN_ALIASES = {
-    "premuim": "premium",
+    "premium": "elite",  # Map premium to elite tier
+    "premuim": "elite",  # Handle typo variant - map to elite
     "elite": "elite",
     "tier2": "elite",
     "tier_2": "elite",
@@ -98,7 +114,16 @@ async def get_user_plan(user_id: str = Depends(verify_supabase_token)):
         expiry = subscription.get("expired_at")
         plan = normalize_plan_name(raw_plan)
         
-        is_premium = status == "active" and plan in PREMIUM_PLAN_KEYS
+        # Check if subscription is active and not expired
+        is_active = status == "active"
+        if expiry is None:
+            is_not_expired = True
+        else:
+            # Normalize both datetimes to timezone-aware UTC for safe comparison
+            expiry_normalized = normalize_datetime_for_comparison(expiry)
+            now = datetime.now(timezone.utc)
+            is_not_expired = expiry_normalized > now
+        is_premium = is_active and is_not_expired and plan in PREMIUM_PLAN_KEYS
         
         return {
             "plan": plan if is_premium else "free",

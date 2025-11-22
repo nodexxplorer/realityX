@@ -17,12 +17,14 @@ async def check_rate_limit_endpoint(user_id: str = Depends(verify_supabase_token
     try:
         # Get user's subscription tier
         tier = await rate_limiter.get_tier_for_user(user_id)
+        logger.info(f"User {user_id} tier detected as: {tier}")
         
         if tier not in rate_limiter.tier_config:
             logger.warning(f"Unknown tier '{tier}' for user {user_id}, defaulting to 'free'")
             tier = "free"
 
         config = rate_limiter.tier_config[tier]
+        logger.info(f"User {user_id} using tier config: {tier} with limit: {config['daily_message_limit']}")
 
         # Get daily message count
         from db.queries import get_user_message_count_today, get_user_monthly_cost

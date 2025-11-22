@@ -8,14 +8,14 @@ const tierAliasMap: Record<string, string> = {
   premuim: 'premium',
   tier1: 'pro',
   tier_1: 'pro',
-  tier2: 'premium',
-  tier_2: 'premium',
+  tier2: 'Elite',
+  tier_2: 'Elite',
 };
 
 const tierLimitMap: Record<string, number> = {
   free: 5,
   pro: 10,
-  premium: 20,
+  Elite: 20,
 };
 
 const normalizeTier = (tier?: string) => {

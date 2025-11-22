@@ -135,6 +135,7 @@ const App = () => {
               </>
             )}
           </div>
+          
 
           {/* Desktop - Login or Avatar */}
           <div className="hidden lg:flex items-center gap-4">

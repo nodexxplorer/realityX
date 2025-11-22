@@ -83,11 +83,11 @@ class RateLimiter:
                 "monthly_cost_limit": settings.ELITE_TIER_MONTHLY_COST_LIMIT,
                 "tier_name": "elite"
             },
-            "premuim": {  # Handle typo variant
-                "daily_message_limit": settings.ELITE_TIER_DAILY_LIMIT,
-                "monthly_cost_limit": settings.ELITE_TIER_MONTHLY_COST_LIMIT,
-                "tier_name": "elite"
-            },
+            # "premuim": {  # Handle typo variant
+            #     "daily_message_limit": settings.ELITE_TIER_DAILY_LIMIT,
+            #     "monthly_cost_limit": settings.ELITE_TIER_MONTHLY_COST_LIMIT,
+            #     "tier_name": "elite"
+            # },
             "tier1": {  # Legacy plan naming
                 "daily_message_limit": settings.PRO_TIER_DAILY_LIMIT,
                 "monthly_cost_limit": settings.PRO_TIER_MONTHLY_COST_LIMIT,
@@ -100,7 +100,8 @@ class RateLimiter:
             }
         }
         self.tier_aliases = {
-            "premuim": "elite",
+            "premium": "elite",  # Map premium to elite tier
+            "premuim": "elite",  # Handle typo variant
             "tier1": "pro",
             "tier_1": "pro",
             "tier2": "elite",
@@ -112,16 +113,19 @@ class RateLimiter:
         try:
             # Try to get from subscription table first
             tier = await get_user_subscription_tier(user_id)
+            logger.info(f"get_tier_for_user: Raw tier from DB for {user_id}: {tier}")
             if tier:
                 tier_lower = tier.lower()
                 tier_lower = self.tier_aliases.get(tier_lower, tier_lower)
+                logger.info(f"get_tier_for_user: Normalized tier for {user_id}: {tier_lower} (from {tier})")
                 return tier_lower
             
-            # Fallback to elite check
-            is_elite = await verify_user_is_elite(user_id)
+            # Fallback to premium check
+            is_premium = await verify_user_is_premium(user_id)
+            logger.info(f"get_tier_for_user: No subscription found for {user_id}, is_premium: {is_premium}")
             return "elite" if is_premium else "free"
         except Exception as e:
-            logger.warning(f"Error getting user tier for {user_id}: {e}")
+            logger.warning(f"Error getting user tier for {user_id}: {e}", exc_info=True)
             return "free"
 
     async def get_reset_time(self, tier: str, limit_type: str = "daily") -> datetime:

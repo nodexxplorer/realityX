@@ -112,7 +112,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 }}
               >
                 <motion.div
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`flex items-center space-x-3 px-4 my-2 py-3 rounded-lg transition-colors ${
                     active
                       ? 'bg-blue-600 text-white'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'

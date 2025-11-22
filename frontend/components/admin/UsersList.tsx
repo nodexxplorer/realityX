@@ -137,12 +137,12 @@ export function UsersList() {
         <table className="w-full">
           <thead className="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Premium</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Premium</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -154,27 +154,27 @@ export function UsersList() {
                 animate={{ opacity: 1 }}
                 className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors"
               >
-                <td className="px-6 py-4">
+                <td className="px-5 py-4">
                     <Link href={`/admin/users/${user.id}`}
                      className="text-blue-600 dark:text-blue-400 hover:underline font-medium">
                       {user.name}
                   </Link>
                 </td>
-                <td className="px-6 py-4 text-sm">{user.email}</td>
-                <td className="px-6 py-4 text-sm font-medium">{user.role}</td>
-                <td className="px-6 py-4">
+                <td className="px-3 py-4 text-sm">{user.email}</td>
+                <td className="px-3 py-4 text-sm font-medium">{user.role}</td>
+                <td className="px-3 py-4">
                   {user.is_premium ? (
                     <CheckCircle size={18} className="text-green-500" />
                   ) : (
                     <X size={18} className="text-gray-400" />
                   )}
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-3 py-4">
                   <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusClass(user.status)}`}>
                     {user.status}
                   </span>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-3 py-4">
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handlePromoteUser(user.id)}

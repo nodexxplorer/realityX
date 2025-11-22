@@ -17,7 +17,7 @@ const tierLimitMap: Record<string, number> = {
   free: 5,
   pro: 10,
   elite: 20,
-  premium: 20, // Legacy support
+  // premium: 20, // Legacy support
 };
 
 const normalizeTier = (tier?: string) => {
@@ -49,11 +49,22 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
+    
+    // Backend is the source of truth - use its values directly
+    // Normalize tier for display purposes only
     const tier = normalizeTier(data.tier);
     const currentCount = data.messages?.used ?? 0;
-    const tierLimit = tierLimitMap[tier as keyof typeof tierLimitMap] ?? tierLimitMap.free;
-    const limit = data.messages?.limit ?? tierLimit;
+    const limit = data.messages?.limit ?? tierLimitMap[tier as keyof typeof tierLimitMap] ?? tierLimitMap.free;
     const remaining = data.messages?.remaining ?? Math.max(limit - currentCount, 0);
+    
+    // Log for debugging (remove in production if needed)
+    console.log('Rate limit data from backend:', {
+      tier: data.tier,
+      normalizedTier: tier,
+      messages: data.messages,
+      limit,
+      remaining
+    });
     
     // Transform backend response to match frontend interface
     return NextResponse.json({
