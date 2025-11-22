@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { useWallet, WalletMultiButton } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import Link from "next/link";
 
 export default function ProfileDropdown() {
